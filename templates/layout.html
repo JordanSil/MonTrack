@@ -1,0 +1,113 @@
+<head>
+  <link href="/static/styles.css" rel="stylesheet">
+  <script>
+/*
+    window.addEventListener("load", () => {
+      const button = document.getElementById("settings");
+      const modal = document.getElementById("settings-modal");
+      const submit = document.getElementById("modal-submit");
+      button.addEventListener("click", () => { alert("CLICKED")
+        modal.style.display = "flex";
+        alert("OPENED")
+      });
+      submit.addEventListener("click", () => { alert("CLICKED")
+        modal.style.display = "none";
+        alert("CLOSED")
+      });
+    });
+
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="styles w-embed">
+  </div>
+  <main class="main-page">
+    <div class="side-menu">
+      <div class="side-menu_top">
+        <a href="/" class="logo-link">mon<span class="logo-link_span">track</span></a>
+        <div class="side-menu_user">
+          <div class="sm_user-wrapper"><img src="{{ userimage }}" loading="lazy" alt="" class="user_profile-image">
+            <div class="user_name">{{ username }}</div>
+            <a href="/settings" class="sm_user-link" id="settings">Settings</a>
+          </div>
+        </div>
+      </div>
+      <div class="side-menu_links">
+        <div class="sm_links-wrapper">
+          <a href="/" aria-current="page" class="side-menu_link w-inline-block w--current">
+            <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+                <path fill="#1063c2" d="M12.5 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1h5zm0 3a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1h5zm.5 3.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 .5-.5zm-.5 2.5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1h5z"/>
+                <path fill="#1063c2" d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2zM4 1v14H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h2zm1 0h9a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5V1z"/>
+              </svg></div>
+            <div>Dashboard</div>
+          </a>
+          <a href="/expenses" class="side-menu_link w-inline-block">
+            <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+                <path fill="#1063c2" d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path>
+                <path fill="#1063c2" d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z"></path>
+              </svg></div>
+            <div>Add Expense</div>
+          </a>
+          <a href="/categories" aria-current="page" class="side-menu_link w-inline-block w--current">
+            <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+                <path fill="#1063c2" d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z"/>
+                <path fill="#1063c2" d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z"/>
+              </svg></div>
+            <div>Catagories</div>
+          </a>
+          <a href="/search" aria-current="page" class="side-menu_link w-inline-block w--current">
+            <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+                <path fill="#1063c2" d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+              </svg></div>
+            <div>Search</div>
+          </a>
+          <a href="/summary" aria-current="page" class="side-menu_link w-inline-block w--current">
+            <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+              <path fill="#1063c2" d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+              <path fill="#1063c2" d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+              <path fill="#1063c2" d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+            </svg></div>
+            <div>Summary</div>
+          </a>
+          <div class="sm_link-wrapper">
+            <a aria-current="page" class="side-menu_link inactive-link w-inline-block w--current">
+              <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+                  <path fill="#1063c2" d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"></path>
+                  <path fill="#1063c2" d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                  <path fill="#1063c2" d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"></path>
+                </svg></div>
+              <div>Currencies</div>
+            </a>
+            <div class="label-coming">coming<br>soon</div>
+          </div>
+          <a href="/logout" aria-current="page" class="side-menu_link w-inline-block w--current">
+            <div class="menu-svg w-embed"><svg xmlns="http://www.w3.org/2000/svg" style="display: block;" width="100%" height="100%" fill="currentColor" class="bi bi-currency-exchange" viewbox="0 0 16 16">
+                <path fill="#1063c2" fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+              </svg></div>
+            <div>Log Out</div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div id="settings-modal" class="settings-modal">
+        <div class="settings-modal_wrapper">
+          <div class="dashboard_panel">
+            <form id="wf-form-settings-form" name="wf-form-settings-form" data-name="settings-form" method="get" class="setting-form" aria-label="settings-form">
+              <div class="categories_color-change-wrapper">
+                <label for="name">Name</label>
+                <label for="name">Name</label>
+                <label for="name">Name</label>
+                <label for="name">Name</label>
+                <label for="name">Name</label>
+                <label for="name">Name</label>
+              </div>
+              <input type="submit" id="modal-submit" value="Submit" data-wait="Please wait..." class="w-button">
+            </form>
+          </div>
+        </div>
+      </div>
+      {% block body %}{% endblock %}
+    </main>
+</body>

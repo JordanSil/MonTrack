@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings
+{% endblock %}
+
+{% block body %}
+<div class="dashboard_panel panel-shadow">
+  <div class="settings-wrapper">
+    <h1 class="panel-title-large">Update user setttings</h1>
+      <form id="wf-form-settings-from" name="wf-form-settings-from" data-name="settings-from" method="post" aria-label="settings-from">
+        <div class="form-inputs">
+          <div class="form_input_wrapper flex-h">
+            <input type="text" class="form_input-text input-width input-radius w-input" maxlength="256" name="fname" data-name="fname" placeholder="First Name" id="fname">
+            <input type="text" class="form_input-text input-width input-radius w-input" maxlength="256" name="lname" data-name="lname" placeholder="Last Name" id="lname">
+          </div>
+          <div class="form_input_wrapper flex-h">
+            <input type="text" class="form_input-text input-width input-radius w-input" maxlength="256" name="username" data-name="username" placeholder="Username" id="username">
+            <input type="text" class="form_input-text input-width input-radius w-input" maxlength="256" name="password" data-name="password" placeholder="Password" id="password">
+          </div>
+          <input type="text" class="form_input-text input-radius w-input" maxlength="256" name="profile-image" data-name="profile-image" placeholder="Profile Image URL" id="profile-image">
+        </div>
+        <input type="submit" value="Update" data-wait="Please wait..." class="button">
+      </form>
+  </div>
+</div>
+{% endblock %}

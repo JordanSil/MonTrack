@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Expenses
+{% endblock %}
+
+{% block body %}
+<div class="body-center">
+  <div class="add-expense">
+    <div class="dashboard-panel panel-shadow">
+      <div class="form-wrapper">
+        <h1 class="title-expense">Add your expense</h1>
+          <form id="wf-form-expenses-from" name="wf-form-expenses-from" data-name="expenses-from" method="post" class="form-login">
+            <div class="form-inputs">
+              <div class="form_input_wrapper flex-h">
+                <input type="date" class="form_input-text input-width input-radius w-input" maxlength="256" name="date" data-name="date" placeholder="Date" id="date" required="">
+                <input type="text" class="form_input-text input-width input-radius w-input" maxlength="256" name="shop" data-name="shop" placeholder="Shop" id="shop" required="">
+                <input type="text" class="form_input-text input-width input-radius w-input" maxlength="256" name="total" data-name="total" placeholder="Total" id="total" required="">
+              </div>
+              <div class="form_input_wrapper flex-h">
+                <select id="currency" name="currency" data-name="currency" class="form_dropdown input-radius w-select">
+                  <option value="">Select currency...</option>
+                  <option value="{{ currencies[0][0] }}">{{ currencies[0][0] }}</option>
+                  <!-- Put back in once currencies page is ready
+                  {% for name in currencies %}
+                  <option value="{{ name[0] }}">{{ name[0] }}</option>
+                  {% endfor %}
+                  -->
+                </select>
+                <select id="category" name="category" data-name="category" class="form_dropdown input-radius w-select">
+                  <option value="">Select category...</option>
+                  {% for name in categories %}
+                  <option value="{{ name[0] }}">{{ name[0] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <input type="text" class="form_input-text input-radius w-input" maxlength="256" name="description" data-name="description" placeholder="Description" id="description" required="">
+            </div>
+            <input type="submit" value="Add Expense" data-wait="Please wait..." class="button">
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

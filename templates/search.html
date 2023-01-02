@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<script>
+/*
+window.addEventListener("load", () => {
+  const priceStart = document.getElementById("search-price-start");
+  const priceEnd = document.getElementById("search-price-end");
+
+  function formatPrice(event) {
+    event.target.value = parseFloat(event.target.value).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    }); alert("CURRENT CHECK");
+  }
+
+  priceStart.addEventListener("focus", formatPrice);
+  priceEnd.addEventListener("change", formatPrice);
+});
+*/
+</script>
+<script>
+
+window.addEventListener("load", () => {
+  const selector = document.getElementById("search-dropdown");
+  wrappers = [
+  document.getElementById("search-description-w"),
+  document.getElementById("search-category-w"),
+  document.getElementById("search-shop-w"),
+  document.getElementById("search-date-w"),
+  document.getElementById("search-total-w"),
+  ];
+
+  selector.addEventListener("change", (event) => {
+    const selectedName = event.target.value;
+    const selectedDiv = document.getElementById("search-"+selectedName+"-w");
+
+    selectedDiv.style.display = "flex";
+
+    wrappers.forEach((wrapper) => {
+      if (wrapper !== selectedDiv) {
+        wrapper.style.display = "none";
+      }
+    });
+  });
+});
+
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="body-center">
+  <div class="dashboard_panel panel-shadow">
+    <div class="search-bar_wrapper">
+      <h1 class="panel-title-large">Search expenses</h1>
+        <form id="wf-form-search-from" name="wf-form-search-from" data-name="search-from" method="post" class="form-search" aria-label="search-from">
+          <div class="form-inputs">
+            <div class="form_input_wrapper flex-h">
+              <select id="search-dropdown" name="search-dropdown" data-name="search-dropdown" required="" class="form_dropdown input-radius w-select">
+                <option value="">Select type...</option>
+                <option value="description">Description</option>
+                <option value="category">Category</option>
+                <option value="shop">Shop</option>
+                <option value="date">Date</option>
+                <option value="total">Total</option>
+              </select>
+              <div class="search-input-dynamic">
+                <div id="search-description-w" class="search-input-x1">
+                  <input type="text" class="form_input-text input-radius w-input" maxlength="256" name="search-description" data-name="search-description" placeholder="Description" id="search-description">
+                </div>
+                <div id="search-category-w" class="search-input-x1" style="display:none">
+                  <input type="text" class="form_input-text input-radius w-input" maxlength="256" name="search-category" data-name="search-category" placeholder="Category" id="search-category">
+                </div>
+                <div id="search-shop-w" class="search-input-x1" style="display:none">
+                  <input type="text" class="form_input-text input-radius w-input" maxlength="256" name="search-shop" data-name="search-shop" placeholder="Shop" id="search-shop">
+                </div>
+                <div id="search-date-w" class="search-input-x2" style="display:none">
+                  <input type="date" class="form_input-text input-radius w-input" maxlength="256" name="search-date-start" data-name="search-date-start" id="search-date-start">
+                  <input type="date" class="form_input-text input-radius w-input" maxlength="256" name="search-date-end" data-name="search-date-end" id="search-date-end">
+                </div>
+                <div id="search-total-w" class="search-input-x2" style="display:none">
+                  <input type="number" class="form_input-text input-radius w-input" maxlength="256" name="search-total-start" data-name="search-total-start" placeholder="Start Total" id="search-total-start">
+                  <input type="number" class="form_input-text input-radius w-input" maxlength="256" name="search-total-end" data-name="search-total-end" placeholder="End Total" id="search-total-end">
+                </div>
+              </div>
+              <input type="submit" value="Search" data-wait="Please wait..." class="button w-button">
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+  <div class="body-index_bottom">
+    {% for row in search_results %}
+      <div class="dashboard_panel bottom_latest panel-shadow_thin">
+        <div class="latest-expenses_wrapper">
+          <div class="category-color_wrapper">
+            <div class="catagory-color" style="background-color:{{ row[10] }}"></div>
+            <div id="latest_date" class="dash_text">{{ row[8] }}</div>
+          </div>
+          <div id="latest_shop" class="dash_text">{{ row[3] }}</div>
+          <div id="latest_category" class="dash_text">{{ row[6] }}</div>
+          <div id="latest_total" class="dash_text">{{ row[9] }}{{ "{:,.2f}".format(row[4]) }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

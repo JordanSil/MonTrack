@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<script>
+
+window.addEventListener("load", () => {
+  const max_month = document.getElementById("max_month");
+  const max_value = max_month.getAttribute("value");
+  const columns = document.querySelectorAll(".dash_monthly-column");
+  console.log(columns)
+
+  columns.forEach(column => {
+    column_value = column.getAttribute("value");
+    percentage = (column_value / max_value) * 100;
+    column.style = "height: "+percentage+"%;";
+  });
+});
+
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="body-center">
+  <div class="body-index_top">
+    <div class="dashboard_panel panel-shadow">
+      <div class="dash_monthly">
+        <div class="dash_title-small">6 Month Overview</div>
+        <div class="dash_monthly-overview">
+          <div id="max_month" value="{{ max_month }}" style="display:none"></div>
+          {% for row in six_months %}
+          <div class="month-wrapper">
+            <div class="dash_monthly-column" value="{{ row[1] }}"></div>
+            <div class="dash_monthly-text">
+              <div class="dash_monthly-medium bold">{{ row[2] }}{{ "{:,.2f}".format(row[1]) }}</div>
+              <div class="dash_monthly-small">{{ row[0] }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="body-index_middle">
+      <div class="dashboard_panel panel-shadow">
+        <div class="dash_info-wrapper">
+          <div class="dash_title-small">Monthly Average {{ year }}</div>
+          <div class="dash_monthly-avg">
+            <div class="monthly-avg_total">${{ "{:,.2f}".format(monthly_average) }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard_panel panel-shadow">
+        <div class="dash_info-wrapper">
+          <div class="dash_title-small">Top Expenses {{ year }}</div>
+          <div class="dash_middle-lists dash_text">
+            {% for row in top_expenses %}
+            <div class="d_middle-list_item">
+              <div class="category-color_wrapper">
+                <div class="catagory-color" style="background-color:{{ row[3] }}"></div>
+                <div>{{ row[0] }}</div>
+              </div>
+              <div>{{ row[2] }}{{ "{:,.2f}".format(row[1]) }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="dashboard_panel panel-shadow">
+        <div class="dash_info-wrapper">
+          <div class="dash_title-small">Top Catagories {{ year }}</div>
+          <div class="dash_middle-lists dash_text">
+            {% for row in top_categories %}
+            <div class="dash_top-categories" style="background-color:{{ row[4] }}">
+              <div>{{ row[3] }}</div>
+              <div>{{ row[5] }}{{ "{:,.2f}".format(row[2]) }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="body-index_bottom">
+      {% for row in expenses %}
+        <div class="dashboard_panel bottom_latest panel-shadow_thin">
+          <div class="latest-expenses_wrapper">
+            <div class="category-color_wrapper">
+              <div class="catagory-color" style="background-color:{{ row[10] }}"></div>
+              <div id="latest_date" class="dash_text">{{ row[8] }}</div>
+            </div>
+            <div id="latest_shop" class="dash_text">{{ row[3] }}</div>
+            <div id="latest_category" class="dash_text">{{ row[6] }}</div>
+            <div id="latest_total" class="dash_text">{{ row[9] }}{{ "{:,.2f}".format(row[4]) }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
