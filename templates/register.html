@@ -19,6 +19,15 @@
               <input type="text" autocomplete="off" class="form_input-text input-radius w-input" maxlength="30" name="password" data-name="password" placeholder="Password" id="password" required="">
               <input type="text" autocomplete="off" class="form_input-text input-radius w-input" maxlength="30" name="confirmation" data-name="confirmation" placeholder="Confirmation" id="confirmation" required="">
             </div>
+            <div class="flash-msg">
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for message in messages %}
+                    {{ message }}
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+            </div>
             <input type="submit" value="Register" data-wait="Please wait..." class="button w-button">
           </form>
         </div>

@@ -1026,6 +1026,13 @@ body {
     margin: 60px;
   }
 
+  .flash-msg {
+    width: 100%;
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
   @media screen and (max-width: 479px) {
     h1 {
       font-size: 36px;

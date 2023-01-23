@@ -1,4 +1,3 @@
-import os
 import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -6,6 +5,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required
 from datetime import datetime
+from validators import email as is_valid_email
 
 # Configure application
 app = Flask(__name__)
@@ -69,10 +69,10 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
+    
     # clear any session
     session.clear()
-
+    
     # if GET
     if request.method == "GET":
         return render_template("login.html")
@@ -97,20 +97,22 @@ def login():
         # Query database for username
         cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
         result = cursor.fetchone()
+       
+        # Ensure username exists
+        if result is None:
+            flash("Username does not exist")
+            return render_template("login.html")                    
 
-        print(result)
-        print(result[3])
-
-        # Ensure username exists and password is correct
-        if result[3] != username and not check_password_hash(result[5], password):
+        # Ensure password is correct
+        if username != result[3] or not check_password_hash(result[5], password):
+            flash("Username or Password is incorrect")
             return render_template("login.html")
-        
+        else:
+            # Remember which user has logged in
+            session["user_id"] = result[0]
 
-        # Remember which user has logged in
-        session["user_id"] = result[0]
-
-        # Redirect user to home page
-        return redirect("/")
+            # Redirect user to home page
+            return redirect("/")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -145,10 +147,16 @@ def register():
 
         # check matching passwords
         if password != confirmation:
+            flash("Passwords do not match")
             return render_template("register.html")
 
         # hash passowrd
         hash = generate_password_hash(password)
+
+        # validate email
+        if not is_valid_email(email):
+            flash("Invalid email addrress")
+            return render_template("register.html")
 
         # open db connection and cursor
         connect = sqlite3.connect("expenses.db")
@@ -160,7 +168,8 @@ def register():
 
         # if usernames exists
         if result:
-            return render_template("register.html")
+            flash("Username already exists")
+            return render_template("register.html")          
 
         # if username does not exist, insert username and all details into database
         if not result:
@@ -461,6 +470,3 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
-
-
-
