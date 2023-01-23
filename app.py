@@ -98,9 +98,13 @@ def login():
         cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
         result = cursor.fetchone()
 
+        print(result)
+        print(result[3])
+
         # Ensure username exists and password is correct
         if result[3] != username and not check_password_hash(result[5], password):
             return render_template("login.html")
+        
 
         # Remember which user has logged in
         session["user_id"] = result[0]
