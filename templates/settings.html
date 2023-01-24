@@ -20,6 +20,15 @@
           </div>
           <input type="text" class="form_input-text input-radius w-input" maxlength="256" name="profile-image" data-name="profile-image" placeholder="Profile Image URL" id="profile-image">
         </div>
+        <div class="flash-msg">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                {{ message }}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        </div>
         <input type="submit" value="Update" data-wait="Please wait..." class="button">
       </form>
   </div>

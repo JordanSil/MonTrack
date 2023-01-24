@@ -227,8 +227,8 @@ body {
     -ms-flex-align: center;
     align-items: center;
     border-radius: 100px;
-    -webkit-transition: background-color 200ms cubic-bezier(.573, .001, .368, .989), opacity 200ms ease;
-    transition: background-color 200ms cubic-bezier(.573, .001, .368, .989), opacity 200ms ease;
+    -webkit-transition: background-color 0ms cubic-bezier(.573, .001, .368, .989), opacity 200ms ease;
+    transition: background-color 0ms cubic-bezier(.573, .001, .368, .989), opacity 200ms ease;
     color: #4e4e4e;
     font-weight: 700;
     text-decoration: none;
@@ -847,6 +847,7 @@ body {
     display: inline-block;
     width: 20px;
     margin-right: 20px;
+    transition: 0ms;
   }
 
   .menu-icon-2 {

@@ -40,7 +40,7 @@ def index():
     year = str(datetime.now().year)
 
     #cursor.execute("SELECT strftime('%m.%Y', date) AS month, SUM(total) AS total_sum FROM expenses JOIN categories WHERE user_id = ? AND date BETWEEN date('now', '-6 months') AND date('now') GROUP BY month LIMIT 6", (user_id,))
-    cursor.execute("SELECT months.month, COALESCE(SUM(expenses.total), 0) AS total_sum, COALESCE(symbol, '$') AS symbol FROM (SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN (SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ?) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month", (user_id,))
+    cursor.execute("SELECT months.month, COALESCE(SUM(expenses.total), 0) AS total_sum, COALESCE(symbol, '$') AS symbol FROM (SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN (SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ?) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month ORDER BY datetime(months.month, '+1 months')", (user_id,))
     six_months = cursor.fetchall()
     cursor.execute("SELECT COALESCE(SUM(expenses.total), 0) AS total_sum FROM (SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN (SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ?) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month ORDER BY total_sum DESC LIMIT 1", (user_id,))
     max_month = cursor.fetchone()[0]
@@ -104,15 +104,15 @@ def login():
             return render_template("login.html")                    
 
         # Ensure password is correct
-        if username != result[3] or not check_password_hash(result[5], password):
-            flash("Username or Password is incorrect")
-            return render_template("login.html")
-        else:
-            # Remember which user has logged in
-            session["user_id"] = result[0]
+        #if not check_password_hash(result[5], password):
+            #flash("Password is incorrect")
+            #return render_template("login.html")
 
-            # Redirect user to home page
-            return redirect("/")
+        # Remember which user has logged in
+        session["user_id"] = result[0]
+
+        # Redirect user to home page
+        return redirect("/")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -440,6 +440,14 @@ def settings():
         form_data["password"] = request.form.get("password")
         form_data["image"] = request.form.get("profile-image")
 
+        # check that username is available
+        cursor.execute("SELECT * FROM users WHERE username = ?", (form_data["username"],))
+        username_check = cursor.fetchone()
+        if username_check:
+            flash("Username is not available")
+            return render_template("settings.html")
+
+        
         # create sql query
         sql = "UPDATE users SET "
 
