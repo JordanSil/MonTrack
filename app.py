@@ -8,15 +8,15 @@ from datetime import datetime
 from validators import email as is_valid_email
 
 # Configure application
-application = Flask(__name__)
+app = Flask(__name__)
 
 # Configure session to use filesystem (instead of signed cookies) <----- RESEARCH THIS
-application.config["SESSION_PERMANENT"] = False
-application.config["SESSION_TYPE"] = "filesystem"
-Session(application)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 
-@application.route("/")
+@app.route("/")
 @login_required
 def index():
     # --------------- GLOBAL SETUP --------------- #
@@ -66,7 +66,7 @@ def index():
     return render_template("index.html", username=username, userimage=userimage, year=year, six_months=six_months, max_month=max_month, expenses=expenses, top_expenses=top_expenses, top_categories=top_categories, monthly_average=monthly_average)
 
 
-@application.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
     
@@ -115,7 +115,7 @@ def login():
         return redirect("/")
 
 
-@application.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
     # if method is get, render login form
@@ -185,7 +185,7 @@ def register():
         return redirect("/")
 
 
-@application.route("/expenses", methods=["GET", "POST"])
+@app.route("/expenses", methods=["GET", "POST"])
 @login_required
 def expenses():
 
@@ -238,7 +238,7 @@ def expenses():
     return redirect("/")
 
 
-@application.route("/categories", methods=["GET", "POST"])
+@app.route("/categories", methods=["GET", "POST"])
 @login_required
 def categories():
 
@@ -285,7 +285,7 @@ def categories():
     return redirect("/categories")
 
 
-@application.route("/summary", methods=["GET", "POST"])
+@app.route("/summary", methods=["GET", "POST"])
 @login_required
 def summary():
 
@@ -330,7 +330,7 @@ def summary():
         return redirect("/summary")
 
 
-@application.route("/search", methods=["GET", "POST"])
+@app.route("/search", methods=["GET", "POST"])
 @login_required
 def search():
 
@@ -403,7 +403,7 @@ def search():
         return render_template("search.html", username=username, userimage=userimage, search_results=search_results, expenses=expenses)
 
 
-@application.route("/settings", methods=["GET", "POST"])
+@app.route("/settings", methods=["GET", "POST"])
 def settings():
     # --------------- GLOBAL SETUP --------------- #
     # set username via session id
@@ -470,7 +470,7 @@ def settings():
         return redirect("/")
 
 
-@application.route("/logout")
+@app.route("/logout")
 def logout():
 
     # clear session
