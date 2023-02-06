@@ -14,7 +14,7 @@ application = Flask(__name__)
 application.config["SESSION_PERMANENT"] = False
 application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
-
+print()
 
 @application.route("/")
 @login_required
