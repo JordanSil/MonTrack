@@ -357,17 +357,6 @@ def search():
     # if method is post
     if request.method == "POST":
 
-        # define input fields
-        #dropdown = request.form.get("search-dropdown")
-        #description = request.form.get("search-description")
-        #category = request.form.get("search-category")
-        #shop = request.form.get("search-shop")
-        #date_start = request.form.get("search-date-start")
-        #date_end = request.form.get("search-date-end")
-        #price_start = request.form.get("search-price-start")
-        #price_end = request.form.get("search-price-end")
-
-        print("------------")
         dropdown_value = str(request.form.get("search-dropdown"))
 
         if dropdown_value == "description" or dropdown_value == "category" or dropdown_value == "shop":
