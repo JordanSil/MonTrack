@@ -12,12 +12,19 @@ window.addEventListener("load", () => {
   const max_month = document.getElementById("max_month");
   const max_value = max_month.getAttribute("value");
   const columns = document.querySelectorAll(".dash_monthly-column");
-  console.log(columns)
 
   columns.forEach(column => {
-    column_value = column.getAttribute("value");
-    percentage = (column_value / max_value) * 100;
-    column.style = "height: "+percentage+"%;";
+    const column_value = parseFloat(column.getAttribute("value"));
+    let height; 
+
+    if (column_value === 0) {
+      height = "5px";
+    } else {
+      const percentage = (column_value / max_value) * 100;
+      height = percentage + "%";
+    }
+
+    column.style.height = height;
   });
 });
 
@@ -48,7 +55,7 @@ window.addEventListener("load", () => {
     <div class="body-index_middle">
       <div class="dashboard_panel panel-shadow">
         <div class="dash_info-wrapper">
-          <div class="dash_title-small">Monthly Average {{ year }}</div>
+          <div class="dash_title-small">12 Month Average</div>
           <div class="dash_monthly-avg">
             <div class="monthly-avg_total">${{ "{:,.2f}".format(monthly_average) }}</div>
           </div>

@@ -16,6 +16,8 @@ application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 print()
 
+dburl = 'expenses.db'
+
 @application.route("/")
 @login_required
 def index():
@@ -24,7 +26,7 @@ def index():
     user_id = session["user_id"]
 
     # open db connection and cursor
-    connect = sqlite3.connect("expenses.db")
+    connect = sqlite3.connect(dburl)
     cursor = connect.cursor()
 
     # define username
@@ -41,26 +43,25 @@ def index():
 
     cursor.execute("SELECT months.month, COALESCE(SUM(expenses.total), 0) AS total_sum, COALESCE(symbol, '$') AS symbol FROM (SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN (SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ?) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month ORDER BY datetime(months.month, '+1 months')", (user_id,))
     six_months = cursor.fetchall()
+    
     cursor.execute("SELECT COALESCE(SUM(expenses.total), 0) AS total_sum FROM (SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN (SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ?) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month ORDER BY total_sum DESC LIMIT 1", (user_id,))
     max_month = cursor.fetchone()[0]
 
     cursor.execute("SELECT expenses.*, strftime('%d.%m.%Y', expenses.date) AS fdate, currencies.symbol, color FROM expenses JOIN currencies ON expenses.currency = currencies.currency JOIN categories ON expenses.category = categories.category WHERE expenses.user_id = ? ORDER BY date DESC LIMIT 5", (user_id,))
     expenses = cursor.fetchall()
 
-    cursor.execute("SELECT shop, total, symbol, color FROM expenses JOIN currencies ON expenses.currency = currencies.currency JOIN categories ON expenses.category = categories.category WHERE user_id = ? ORDER BY total DESC LIMIT 5", (user_id,))
+    cursor.execute("SELECT shop, total, symbol, color FROM expenses JOIN currencies ON expenses.currency = currencies.currency JOIN categories ON expenses.category = categories.category WHERE user_id = ? AND strftime('%Y', date) = strftime('%Y', 'now') ORDER BY total DESC LIMIT 5", (user_id,))
     top_expenses = cursor.fetchall()
 
     cursor.execute("SELECT user_id, strftime('%Y', date) AS year, SUM(total) AS total_sum, expenses.category, color, currencies.symbol FROM expenses JOIN categories ON expenses.category = categories.category JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ? AND strftime('%Y', date) = ? GROUP BY expenses.category ORDER BY total_sum DESC LIMIT 4", (user_id, year))
     top_categories = cursor.fetchall()
 
-    cursor.execute("SELECT SUM(total) / (strftime('%m', 'now')) FROM expenses WHERE user_id = ? AND strftime('%Y', date) = ?", (user_id, year))
-    monthly_average = None
-    if monthly_average:
-        monthly_average = cursor.fetchall()[0][0]
+    cursor.execute("SELECT SUM(total) / 12 FROM expenses WHERE user_id = ? AND date >= date('now', '-12 months')", (user_id,))
+    monthly_average = cursor.fetchall()
+    if monthly_average and monthly_average[0][0] is not None:
+        monthly_average = monthly_average[0][0]
     else:
         monthly_average = 0
-    print("monthly_average IS: ", end="")
-    print(monthly_average)
 
     return render_template("index.html", username=username, userimage=userimage, year=year, six_months=six_months, max_month=max_month, expenses=expenses, top_expenses=top_expenses, top_categories=top_categories, monthly_average=monthly_average)
 
@@ -90,7 +91,7 @@ def login():
             return render_template("login.html")
 
         # open db connection and cursor
-        connect = sqlite3.connect("expenses.db")
+        connect = sqlite3.connect(dburl)
         cursor = connect.cursor()
 
         # Query database for username
@@ -158,7 +159,7 @@ def register():
             return render_template("register.html")
 
         # open db connection and cursor
-        connect = sqlite3.connect("expenses.db")
+        connect = sqlite3.connect(dburl)
         cursor = connect.cursor()
 
         # check username does not exist in database
@@ -193,7 +194,7 @@ def expenses():
     user_id = session["user_id"]
 
     # open db connection and cursor
-    connect = sqlite3.connect("expenses.db")
+    connect = sqlite3.connect(dburl)
     cursor = connect.cursor()
 
     # define username
@@ -246,7 +247,7 @@ def categories():
     user_id = session["user_id"]
 
     # open db connection and cursor
-    connect = sqlite3.connect("expenses.db")
+    connect = sqlite3.connect(dburl)
     cursor = connect.cursor()
 
     # define username
@@ -293,7 +294,7 @@ def summary():
     user_id = session["user_id"]
 
     # open db connection and cursor
-    connect = sqlite3.connect("expenses.db")
+    connect = sqlite3.connect(dburl)
     cursor = connect.cursor()
 
     # define username
@@ -338,7 +339,7 @@ def search():
     user_id = session["user_id"]
 
     # open db connection and cursor
-    connect = sqlite3.connect("expenses.db")
+    connect = sqlite3.connect(dburl)
     cursor = connect.cursor()
 
     # define username
@@ -398,7 +399,7 @@ def settings():
     user_id = session["user_id"]
 
     # open db connection and cursor
-    connect = sqlite3.connect("expenses.db")
+    connect = sqlite3.connect(dburl)
     cursor = connect.cursor()
 
     # define username
