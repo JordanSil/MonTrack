@@ -40,6 +40,9 @@ def index():
 
     # set current year
     year = str(datetime.now().year)
+    
+    cursor.execute(""" SELECT months.month, COALESCE(SUM(expenses.total), 0) AS total_sum, COALESCE(symbol, '$') AS symbol FROM ( SELECT strftime('%m.%Y', date('now', 'start of month', '-11 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-10 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-9 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-8 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-7 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-6 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN ( SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ? ) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month ORDER BY datetime(months.month, '+1 month') """, (user_id,)) 
+    twelve_months = cursor.fetchall()
 
     cursor.execute("SELECT months.month, COALESCE(SUM(expenses.total), 0) AS total_sum, COALESCE(symbol, '$') AS symbol FROM (SELECT strftime('%m.%Y', date('now', 'start of month', '-5 months')) AS month UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-4 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-3 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-2 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month', '-1 months')) UNION ALL SELECT strftime('%m.%Y', date('now', 'start of month')) ) AS months LEFT JOIN (SELECT * FROM expenses JOIN currencies ON expenses.currency = currencies.currency WHERE user_id = ?) expenses ON strftime('%m.%Y', expenses.date) = months.month GROUP BY months.month ORDER BY datetime(months.month, '+1 months')", (user_id,))
     six_months = cursor.fetchall()
@@ -63,7 +66,7 @@ def index():
     else:
         monthly_average = 0
 
-    return render_template("index.html", username=username, userimage=userimage, year=year, six_months=six_months, max_month=max_month, expenses=expenses, top_expenses=top_expenses, top_categories=top_categories, monthly_average=monthly_average)
+    return render_template("index.html", username=username, userimage=userimage, year=year, twelve_months=twelve_months, six_months=six_months, max_month=max_month, expenses=expenses, top_expenses=top_expenses, top_categories=top_categories, monthly_average=monthly_average)
 
 
 @application.route("/login", methods=["GET", "POST"])
@@ -467,3 +470,6 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
+
+#if __name__ == "__main__":
+#    application.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
